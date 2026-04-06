@@ -76,6 +76,8 @@ const io = new Server(httpServer, {
     },
     credentials: true,
   },
+  transports: ['websocket', 'polling'],
+  allowEIO3: true,
 })
 require('./socket/index')(io)
 app.set('io', io)

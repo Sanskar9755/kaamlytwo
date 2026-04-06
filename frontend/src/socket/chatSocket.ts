@@ -9,8 +9,10 @@ export function connect() {
   if (socket?.connected) return
   socket = io(SOCKET_URL, {
     auth: { token: localStorage.getItem('kaamlytwo_token') },
+    transports: ['websocket'],
     autoConnect: true,
-    reconnectionAttempts: 3,
+    reconnectionAttempts: 5,
+    reconnectionDelay: 2000,
   })
 }
 
