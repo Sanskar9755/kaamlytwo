@@ -157,7 +157,13 @@ export default function ChatPage() {
         <div style={{ background: '#fef3c7', color: '#92400e', padding: '8px 16px', textAlign: 'center', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>⚠️ Connection toot gayi. Reconnect ho raha hai...</div>
       )}
       {reconnectFailed && (
-        <div style={{ background: '#fee2e2', color: '#991b1b', padding: '8px 16px', textAlign: 'center', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>❌ Chat connect nahi ho pa raha. Page refresh karein.</div>
+        <div style={{ background: '#fee2e2', color: '#991b1b', padding: '8px 16px', textAlign: 'center', fontSize: 12, fontWeight: 600, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+          ❌ Chat connect nahi ho pa raha.
+          <button
+            onClick={() => { setReconnectFailed(false); setDisconnected(false); chatSocket.disconnect(); chatSocket.connect(); chatSocket.joinConversation(convId); }}
+            style={{ background: '#991b1b', color: '#fff', border: 'none', borderRadius: 6, padding: '3px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 700 }}
+          >Retry</button>
+        </div>
       )}
 
       {/* Messages area */}
