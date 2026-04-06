@@ -7,8 +7,21 @@ interface State { phone: string; purpose: 'register' | 'forgot-password'; name?:
 
 export default function OtpVerifyPage() {
   const navigate = useNavigate()
-  const { state } = useLocation() as { state: State | null }
+  const { state: navState } = useLocation() as { state: State | null }
   const { login } = useAuth()
+
+  // Persist OTP state in sessionStorage so it survives page refresh
+  const state = (() => {
+    if (navState) {
+      sessionStorage.setItem('otp_state', JSON.stringify(navState))
+      return navState
+    }
+    try {
+      const saved = sessionStorage.getItem('otp_state')
+      return saved ? (JSON.parse(saved) as State) : null
+    } catch { return null }
+  })()
+
   const phone = state?.phone ?? ''
   const purpose = state?.purpose ?? 'register'
 
@@ -18,7 +31,10 @@ export default function OtpVerifyPage() {
   const [countdown, setCountdown] = useState(60)
   const refs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null))
 
-  useEffect(() => { refs.current[0]?.focus() }, [])
+  useEffect(() => {
+    if (!state?.phone) { navigate('/register', { replace: true }); return }
+    refs.current[0]?.focus()
+  }, [state, navigate])
   useEffect(() => {
     if (countdown <= 0) return
     const t = setTimeout(() => setCountdown(c => c - 1), 1000)
@@ -30,6 +46,7 @@ export default function OtpVerifyPage() {
     setSubmitting(true); setError('')
     try {
       const res = await authService.verifyOtp(phone, otp, purpose, state?.name, state?.password)
+      sessionStorage.removeItem('otp_state')
       login(res.token, res.user)
       navigate('/dashboard')
     } catch (e: unknown) {
