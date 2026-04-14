@@ -15,6 +15,12 @@ export interface AuthResponse {
 export interface OtpPendingResponse {
   status: string
   phone: string
+  dev_otp?: string
+}
+
+export interface MessageResponse {
+  message: string
+  dev_otp?: string
 }
 
 export interface MessageResponse {

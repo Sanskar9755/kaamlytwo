@@ -41,13 +41,13 @@ export default function RegisterPage() {
     setApiError('')
     try {
       if (v.identifierType === 'phone') {
-        await authService.register({ name: v.name, phone: v.identifier, password: v.password })
-        navigate('/verify-otp', { state: { phone: v.identifier, name: v.name, password: v.password, purpose: 'register' } })
+        const res = await authService.register({ name: v.name, phone: v.identifier, password: v.password }) as OtpPendingResponse
+        navigate('/verify-otp', { state: { phone: v.identifier, name: v.name, password: v.password, purpose: 'register', dev_otp: res.dev_otp } })
         return
       }
       const res = await authService.register({ name: v.name, email: v.identifier, password: v.password })
       if ('token' in res) { login(res.token, res.user); navigate('/dashboard') }
-      else { const r = res as OtpPendingResponse; navigate('/verify-otp', { state: { phone: r.phone, name: v.name, password: v.password, purpose: 'register' } }) }
+      else { const r = res as OtpPendingResponse; navigate('/verify-otp', { state: { phone: r.phone, name: v.name, password: v.password, purpose: 'register', dev_otp: r.dev_otp } }) }
     } catch (e: unknown) {
       const err = e as { response?: { data?: { message?: string } } }
       setApiError(err?.response?.data?.message ?? 'Registration failed.')

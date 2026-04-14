@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import * as authService from '../../services/authService'
 
-interface State { phone: string; purpose: 'register' | 'forgot-password'; name?: string; password?: string }
+interface State { phone: string; purpose: 'register' | 'forgot-password'; name?: string; password?: string; dev_otp?: string }
 
 export default function OtpVerifyPage() {
   const navigate = useNavigate()
@@ -16,6 +16,7 @@ export default function OtpVerifyPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [countdown, setCountdown] = useState(60)
+  const [devOtp, setDevOtp] = useState(state?.dev_otp ?? '')
   const refs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null))
 
   useEffect(() => { refs.current[0]?.focus() }, [])
@@ -56,7 +57,12 @@ export default function OtpVerifyPage() {
   }
 
   const resend = async () => {
-    try { await authService.resendOtp(phone, purpose); setCountdown(60); setDigits(Array(6).fill('')); setTimeout(() => refs.current[0]?.focus(), 50) }
+    try {
+      const res = await authService.resendOtp(phone, purpose)
+      setCountdown(60); setDigits(Array(6).fill(''))
+      if (res.dev_otp) setDevOtp(res.dev_otp)
+      setTimeout(() => refs.current[0]?.focus(), 50)
+    }
     catch (e: unknown) { const err = e as { response?: { data?: { message?: string } } }; setError(err?.response?.data?.message ?? 'Resend failed.') }
   }
 
@@ -67,6 +73,13 @@ export default function OtpVerifyPage() {
         <h2 style={{ fontSize: 24, fontWeight: 900, color: '#1e293b', margin: '0 0 6px' }}>OTP Verify Karo</h2>
         <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 4px' }}>6-digit code bheja gaya hai</p>
         {phone && <span style={{ background: '#f5f3ff', color: '#7c3aed', padding: '4px 12px', borderRadius: 20, fontSize: 13, fontWeight: 700 }}>📱 {phone}</span>}
+
+        {devOtp && (
+          <div style={{ margin: '12px 0 0', background: '#fefce8', border: '1.5px dashed #f59e0b', borderRadius: 12, padding: '10px 16px' }}>
+            <p style={{ margin: 0, fontSize: 12, color: '#92400e', fontWeight: 600 }}>🔧 Dev Mode - Tumhara OTP:</p>
+            <p style={{ margin: '4px 0 0', fontSize: 28, fontWeight: 900, color: '#d97706', letterSpacing: 6 }}>{devOtp}</p>
+          </div>
+        )}
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: 8, margin: '24px 0' }}>
           {digits.map((d, i) => (
