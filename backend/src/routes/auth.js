@@ -32,7 +32,7 @@ router.post('/register', (req, res) => {
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString()
     db.prepare('INSERT INTO otps (identifier, otp_hash, purpose, expires_at) VALUES (?, ?, ?, ?)').run(phone, otpHash, 'register', expiresAt)
     console.log(`[SMS] OTP to ${phone}: ${otp}`)
-    return res.json({ status: 'otp_sent', phone })
+    return res.json({ status: 'otp_sent', phone, dev_otp: otp })
   }
 
   // Email registration
@@ -83,7 +83,7 @@ router.post('/resend-otp', (req, res) => {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString()
   db.prepare('INSERT INTO otps (identifier, otp_hash, purpose, expires_at) VALUES (?, ?, ?, ?)').run(phone, otpHash, purpose || 'register', expiresAt)
   console.log(`[SMS] OTP to ${phone}: ${otp}`)
-  return res.json({ message: 'OTP bhej diya gaya hai.' })
+  return res.json({ message: 'OTP bhej diya gaya hai.', dev_otp: otp })
 })
 
 // POST /api/auth/login
