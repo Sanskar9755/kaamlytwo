@@ -10,8 +10,8 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
           <div style={{ fontSize: 52, marginBottom: 16 }}>💼</div>
           <h1 style={{ fontSize: 52, fontWeight: 900, color: '#fff', margin: '0 0 8px', letterSpacing: '-1px' }}>KaamlyTwo</h1>
-          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 18, margin: '0 0 6px' }}>Apna Kaam, Apni Pehchaan</p>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, maxWidth: 280, margin: '0 auto 40px' }}>Painters, drivers, helpers, IT workers — har kaam yahan milega</p>
+          <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 18, margin: '0 0 6px' }}>Your Work, Your Identity</p>
+          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: 14, maxWidth: 280, margin: '0 auto 40px' }}>Painters, drivers, helpers, IT workers — find the right professional here</p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
             {[['🎨','Painter'],['🚗','Driver'],['💻','IT Expert'],['🔧','Helper'],['🏗️','Builder'],['📦','Delivery']].map(([e,l]) => (
               <div key={l} style={{ background: 'rgba(255,255,255,0.12)', borderRadius: 12, padding: '10px 8px', textAlign: 'center' }}>
@@ -31,7 +31,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             <span style={{ fontSize: 26 }}>💼</span>
             <span style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: '-0.5px' }}>KaamlyTwo</span>
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, margin: 0 }}>Apna Kaam, Apni Pehchaan</p>
+          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 13, margin: 0 }}>Your Work, Your Identity</p>
         </div>
 
         {/* Form */}

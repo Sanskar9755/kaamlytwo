@@ -1,9 +1,18 @@
+export interface WorkerSubSkill {
+  id: number
+  name: string
+}
+
 export interface WorkerSkill {
   id: number
   name: string
   icon: string
   rate: number
+  rate_type: string
   rate_unit_label: string
+  experience_level: string
+  category_name: string | null
+  sub_skills: WorkerSubSkill[]
 }
 
 export interface WorkerResult {
@@ -20,5 +29,5 @@ export interface WorkerResult {
 export interface WorkersSearchResponse {
   workers: WorkerResult[]
   total: number
-  filters: { skill: string | null; location: string | null }
+  filters: { skill: string | null; category: string | null; location: string | null }
 }

@@ -9,12 +9,12 @@ import * as authService from '../../services/authService'
 import type { OtpPendingResponse } from '../../types/auth'
 
 const schema = z.object({
-  name: z.string().min(2, 'Naam kam se kam 2 characters').max(100),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   identifierType: z.enum(['email', 'phone']),
-  identifier: z.string().min(1, 'Email ya phone daalo'),
-  password: z.string().min(8, 'Password kam se kam 8 characters').regex(/\d/, 'Password mein ek number hona chahiye'),
-  confirmPassword: z.string().min(1, 'Password confirm karein'),
-}).refine(d => d.password === d.confirmPassword, { message: 'Passwords match nahi kar rahe', path: ['confirmPassword'] })
+  identifier: z.string().min(1, 'Please enter your email or phone'),
+  password: z.string().min(8, 'Password must be at least 8 characters').regex(/\d/, 'Password must contain at least one number'),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
+}).refine(d => d.password === d.confirmPassword, { message: 'Passwords do not match', path: ['confirmPassword'] })
 
 type F = z.infer<typeof schema>
 
@@ -46,28 +46,28 @@ export default function RegisterPage() {
         return
       }
       const res = await authService.register({ name: v.name, email: v.identifier, password: v.password })
-      if ('token' in res) { login(res.token, res.user); navigate('/dashboard') }
+      if ('token' in res) { login(res.token, res.user); navigate('/intent') }
       else { const r = res as OtpPendingResponse; navigate('/verify-otp', { state: { phone: r.phone, name: v.name, password: v.password, purpose: 'register', dev_otp: r.dev_otp } }) }
     } catch (e: unknown) {
       const err = e as { response?: { data?: { message?: string } } }
-      setApiError(err?.response?.data?.message ?? 'Registration failed.')
+      setApiError(err?.response?.data?.message ?? 'Registration failed. Please try again.')
     }
   }
 
   return (
     <AuthLayout>
-      <h2 style={{ fontSize: 26, fontWeight: 900, color: '#1e293b', margin: '0 0 4px' }}>Account Banao! 🎉</h2>
-      <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 20px' }}>KaamlyTwo par apna safar shuru karein</p>
+      <h2 style={{ fontSize: 26, fontWeight: 900, color: '#1e293b', margin: '0 0 4px' }}>Create Account 🎉</h2>
+      <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 20px' }}>Join KaamlyTwo and get started</p>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>👤 Poora Naam</label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Full Name</label>
           <input {...register('name')} type="text" placeholder="Ali Hassan" style={inp(!!errors.name)} />
           {errors.name && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.name.message}</p>}
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Register kaise karein?</label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Register with</label>
           <div style={{ display: 'flex', borderRadius: 12, border: '1.5px solid #e2e8f0', overflow: 'hidden' }}>
             {(['email', 'phone'] as const).map(t => (
               <button key={t} type="button" onClick={() => { setValue('identifierType', t); setValue('identifier', '') }}
@@ -79,13 +79,13 @@ export default function RegisterPage() {
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>{idType === 'email' ? '📧 Email' : '📱 Phone'}</label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>{idType === 'email' ? '📧 Email Address' : '📱 Phone Number'}</label>
           <input {...register('identifier')} type={idType === 'email' ? 'email' : 'tel'} placeholder={idType === 'email' ? 'email@example.com' : '03001234567'} style={inp(!!errors.identifier)} />
           {errors.identifier && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.identifier.message}</p>}
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>🔒 Password</label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Password</label>
           <div style={{ position: 'relative' }}>
             <input {...register('password')} type={showPw ? 'text' : 'password'} placeholder="••••••••" style={{ ...inp(!!errors.password), paddingRight: 48 }} />
             <button type="button" onClick={() => setShowPw(v => !v)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>
@@ -106,7 +106,7 @@ export default function RegisterPage() {
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>🔐 Confirm Password</label>
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Confirm Password</label>
           <input {...register('confirmPassword')} type="password" placeholder="••••••••" style={inp(!!errors.confirmPassword)} />
           {errors.confirmPassword && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.confirmPassword.message}</p>}
         </div>
@@ -114,12 +114,12 @@ export default function RegisterPage() {
         {apiError && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', color: '#dc2626', fontSize: 13 }}>❌ {apiError}</div>}
 
         <button type="submit" disabled={isSubmitting} style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 800, cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}>
-          {isSubmitting ? '⏳ Register ho raha hai...' : '🎉 Register Karo'}
+          {isSubmitting ? '⏳ Creating account...' : 'Create Account'}
         </button>
       </form>
 
       <p style={{ textAlign: 'center', marginTop: 16, fontSize: 14, color: '#64748b' }}>
-        Pehle se account hai? <Link to="/login" style={{ color: '#7c3aed', fontWeight: 700, textDecoration: 'none' }}>Login karo 🚀</Link>
+        Already have an account? <Link to="/login" style={{ color: '#7c3aed', fontWeight: 700, textDecoration: 'none' }}>Sign In</Link>
       </p>
     </AuthLayout>
   )

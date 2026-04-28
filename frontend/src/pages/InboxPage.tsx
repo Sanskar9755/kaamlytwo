@@ -28,7 +28,7 @@ export default function InboxPage() {
   useEffect(() => {
     getConversations()
       .then(r => setConversations(r.conversations))
-      .catch(() => setError('Conversations load nahi ho paye.'))
+      .catch(() => setError('Failed to load conversations.'))
       .finally(() => setLoading(false))
   }, [])
 
@@ -94,8 +94,8 @@ export default function InboxPage() {
           {!loading && !error && conversations.length === 0 && (
             <div style={{ textAlign: 'center', padding: '60px 20px', animation: 'slideUp 0.4s ease' }}>
               <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(167,139,250,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: 36 }}>💬</div>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 700, fontSize: 17, margin: '0 0 8px' }}>Koi conversation nahi</p>
-              <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, margin: 0 }}>Kisi worker ko Contact Karo!</p>
+      <p style={{ color: 'rgba(255,255,255,0.7)', fontWeight: 700, fontSize: 17, margin: '0 0 8px' }}>No conversations yet</p>
+              <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, margin: 0 }}>Contact a worker to get started!</p>
             </div>
           )}
 
@@ -107,7 +107,7 @@ export default function InboxPage() {
                 const initials = name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
                 const preview = conv.last_message
                   ? conv.last_message.type === 'image' ? '📷 Photo' : truncate(conv.last_message.content, 38)
-                  : 'Koi message nahi'
+                  : 'No messages yet'
                 const time = conv.last_message ? relativeTime(conv.last_message.created_at) : relativeTime(conv.updated_at)
                 const hasUnread = conv.unread_count > 0
 

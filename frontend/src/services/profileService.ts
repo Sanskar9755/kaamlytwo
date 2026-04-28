@@ -1,5 +1,5 @@
 import apiClient from '../lib/axios'
-import type { ProfileResponse, UpdateProfilePayload, Skill } from '../types/profile'
+import type { ProfileResponse, UpdateProfilePayload, Category } from '../types/profile'
 
 export const getProfile = async (): Promise<ProfileResponse> => {
   const { data } = await apiClient.get<ProfileResponse>('/profile')
@@ -20,7 +20,7 @@ export const uploadPhoto = async (file: File): Promise<{ photo_url: string }> =>
   return data
 }
 
-export const getSkills = async (): Promise<Skill[]> => {
-  const { data } = await apiClient.get<Skill[]>('/skills')
-  return data
+export const getCategories = async (): Promise<Category[]> => {
+  const { data } = await apiClient.get<{ categories: Category[] }>('/skills')
+  return data.categories
 }

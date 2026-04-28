@@ -32,10 +32,10 @@ export default function OtpVerifyPage() {
     try {
       const res = await authService.verifyOtp(phone, otp, purpose, state?.name, state?.password)
       login(res.token, res.user)
-      navigate('/dashboard')
+      navigate('/intent')
     } catch (e: unknown) {
       const err = e as { response?: { data?: { message?: string } } }
-      setError(err?.response?.data?.message ?? 'OTP verify nahi hua.')
+      setError(err?.response?.data?.message ?? 'OTP verification failed. Please try again.')
       setSubmitting(false)
       setDigits(Array(6).fill(''))
       setTimeout(() => refs.current[0]?.focus(), 50)
@@ -63,20 +63,20 @@ export default function OtpVerifyPage() {
       if (res.dev_otp) setDevOtp(res.dev_otp)
       setTimeout(() => refs.current[0]?.focus(), 50)
     }
-    catch (e: unknown) { const err = e as { response?: { data?: { message?: string } } }; setError(err?.response?.data?.message ?? 'Resend failed.') }
+    catch (e: unknown) { const err = e as { response?: { data?: { message?: string } } }; setError(err?.response?.data?.message ?? 'Failed to resend OTP.') }
   }
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8f7ff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 20, fontFamily: 'system-ui,sans-serif' }}>
       <div style={{ width: '100%', maxWidth: 400, background: '#fff', borderRadius: 24, padding: '36px 28px', boxShadow: '0 4px 24px rgba(124,58,237,0.1)', border: '1px solid #ede9fe', textAlign: 'center' }}>
         <div style={{ fontSize: 48, marginBottom: 12 }}>📲</div>
-        <h2 style={{ fontSize: 24, fontWeight: 900, color: '#1e293b', margin: '0 0 6px' }}>OTP Verify Karo</h2>
-        <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 4px' }}>6-digit code bheja gaya hai</p>
+        <h2 style={{ fontSize: 24, fontWeight: 900, color: '#1e293b', margin: '0 0 6px' }}>Verify OTP</h2>
+        <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 4px' }}>Enter the 6-digit code sent to</p>
         {phone && <span style={{ background: '#f5f3ff', color: '#7c3aed', padding: '4px 12px', borderRadius: 20, fontSize: 13, fontWeight: 700 }}>📱 {phone}</span>}
 
         {devOtp && (
           <div style={{ margin: '12px 0 0', background: '#fefce8', border: '1.5px dashed #f59e0b', borderRadius: 12, padding: '10px 16px' }}>
-            <p style={{ margin: 0, fontSize: 12, color: '#92400e', fontWeight: 600 }}>🔧 Dev Mode - Tumhara OTP:</p>
+            <p style={{ margin: 0, fontSize: 12, color: '#92400e', fontWeight: 600 }}>🔧 Dev Mode — Your OTP:</p>
             <p style={{ margin: '4px 0 0', fontSize: 28, fontWeight: 900, color: '#d97706', letterSpacing: 6 }}>{devOtp}</p>
           </div>
         )}
@@ -94,11 +94,11 @@ export default function OtpVerifyPage() {
         </div>
 
         {error && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>❌ {error}</p>}
-        {submitting && <p style={{ color: '#7c3aed', fontSize: 13, marginBottom: 12 }}>⏳ Verify ho raha hai...</p>}
+        {submitting && <p style={{ color: '#7c3aed', fontSize: 13, marginBottom: 12 }}>⏳ Verifying...</p>}
 
         <div>
           {countdown > 0
-            ? <p style={{ color: '#64748b', fontSize: 13 }}>Resend in <strong style={{ color: '#7c3aed' }}>{countdown}s</strong></p>
+            ? <p style={{ color: '#64748b', fontSize: 13 }}>Resend code in <strong style={{ color: '#7c3aed' }}>{countdown}s</strong></p>
             : <button onClick={resend} style={{ background: '#f5f3ff', border: '1px solid #ddd6fe', color: '#7c3aed', padding: '8px 20px', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>🔄 Resend OTP</button>
           }
         </div>

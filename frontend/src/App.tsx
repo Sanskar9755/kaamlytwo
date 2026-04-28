@@ -9,19 +9,27 @@ import ProfileSetupPage from './pages/ProfileSetupPage'
 import CustomerSearchPage from './pages/CustomerSearchPage'
 import InboxPage from './pages/InboxPage'
 import ChatPage from './pages/ChatPage'
+import UserIntentPage from './pages/UserIntentPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import ProfileCompletionGuard from './components/ProfileCompletionGuard'
+import { useAuth } from './context/AuthContext'
+
+function RootRedirect() {
+  const { isAuthenticated } = useAuth()
+  return <Navigate to={isAuthenticated ? '/intent' : '/login'} replace />
+}
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<RootRedirect />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-otp" element={<OtpVerifyPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route element={<ProtectedRoute />}>
+        <Route path="/intent" element={<UserIntentPage />} />
         <Route path="/search" element={<CustomerSearchPage />} />
         <Route path="/profile-setup" element={<ProfileSetupPage />} />
         <Route element={<ProfileCompletionGuard />}>

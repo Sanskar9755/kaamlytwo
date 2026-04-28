@@ -97,7 +97,7 @@ export default function DashboardPage() {
         {reviewStats !== null && (
           <div style={{ ...card, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 700, color: '#374151' }}>Meri Rating</p>
+              <p style={{ margin: '0 0 4px', fontSize: 13, fontWeight: 700, color: '#374151' }}>My Rating</p>
               <StarRating rating={reviewStats.avg_rating} count={reviewStats.review_count} size="md" />
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
         {/* Skills */}
         <div style={card}>
           <div style={{ padding: '16px 20px', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: '#0f172a' }}>🛠️ Meri Skills</h2>
+            <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: '#0f172a' }}>🛠️ My Skills</h2>
             <span style={{ background: '#f5f3ff', color: '#7c3aed', padding: '3px 10px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>{skills.length}</span>
           </div>
           <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -123,13 +123,13 @@ export default function DashboardPage() {
                 </div>
                 <p style={{ margin: 0, color: '#7c3aed', fontWeight: 900, fontSize: 18 }}>₹{s.rate}</p>
               </div>
-            )) : <p style={{ textAlign: 'center', color: '#94a3b8', padding: '20px 0' }}>Koi skill nahi mili</p>}
+            )) : <p style={{ textAlign: 'center', color: '#94a3b8', padding: '20px 0' }}>No skills added yet</p>}
           </div>
         </div>
 
         {/* Buttons */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <button onClick={() => navigate('/search')} style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 16, padding: 16, fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 16px rgba(124,58,237,0.3)' }}>🔍 Kaam Dhundho</button>
+          <button onClick={() => navigate('/search')} style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 16, padding: 16, fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 16px rgba(124,58,237,0.3)' }}>🔍 Find Work</button>
           <button onClick={() => navigate('/inbox')} style={{ background: 'linear-gradient(135deg,#6d28d9,#7c3aed)', color: '#fff', border: 'none', borderRadius: 16, padding: 16, fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 16px rgba(124,58,237,0.2)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
             💬 Messages
             {unreadCount > 0 && (
@@ -138,7 +138,7 @@ export default function DashboardPage() {
               </span>
             )}
           </button>
-          <button onClick={() => navigate('/profile-setup')} style={{ background: '#fff', color: '#7c3aed', border: '2px solid #c4b5fd', borderRadius: 16, padding: 14, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>✏️ Profile Edit Karo</button>
+          <button onClick={() => navigate('/profile-setup')} style={{ background: '#fff', color: '#7c3aed', border: '2px solid #c4b5fd', borderRadius: 16, padding: 14, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>✏️ Edit Profile</button>
         </div>
       </div>
     </div>

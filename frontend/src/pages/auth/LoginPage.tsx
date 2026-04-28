@@ -8,8 +8,8 @@ import { useAuth } from '../../context/AuthContext'
 import * as authService from '../../services/authService'
 
 const schema = z.object({
-  identifier: z.string().trim().min(1, 'Email ya phone number daalo'),
-  password: z.string().min(1, 'Password daalo'),
+  identifier: z.string().trim().min(1, 'Please enter your email or phone number'),
+  password: z.string().min(1, 'Please enter your password'),
 })
 type F = z.infer<typeof schema>
 
@@ -26,10 +26,10 @@ export default function LoginPage() {
     try {
       const res = await authService.login(v.identifier, v.password)
       login(res.token, res.user)
-      navigate('/dashboard')
+      navigate('/intent')
     } catch (e: unknown) {
       const err = e as { response?: { data?: { message?: string } } }
-      setApiError(err?.response?.data?.message ?? 'Login failed.')
+      setApiError(err?.response?.data?.message ?? 'Login failed. Please try again.')
     }
   }
 
@@ -41,20 +41,20 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <h2 style={{ fontSize: 26, fontWeight: 900, color: '#1e293b', margin: '0 0 4px' }}>Wapas Aao! 👋</h2>
-      <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 24px' }}>Apne account mein login karein</p>
+      <h2 style={{ fontSize: 26, fontWeight: 900, color: '#1e293b', margin: '0 0 4px' }}>Welcome Back 👋</h2>
+      <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 24px' }}>Sign in to your account</p>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>📱 Email ya Phone</label>
-          <input {...register('identifier')} type="text" placeholder="email@example.com ya 03001234567" style={inp(!!errors.identifier)} />
+          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Email or Phone</label>
+          <input {...register('identifier')} type="text" placeholder="email@example.com or 03001234567" style={inp(!!errors.identifier)} />
           {errors.identifier && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.identifier.message}</p>}
         </div>
 
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-            <label style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>🔒 Password</label>
-            <Link to="/forgot-password" style={{ fontSize: 12, color: '#7c3aed', textDecoration: 'none', fontWeight: 600 }}>Bhool gaye? 🔑</Link>
+            <label style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Password</label>
+            <Link to="/forgot-password" style={{ fontSize: 12, color: '#7c3aed', textDecoration: 'none', fontWeight: 600 }}>Forgot password?</Link>
           </div>
           <div style={{ position: 'relative' }}>
             <input {...register('password')} type={showPw ? 'text' : 'password'} placeholder="••••••••"
@@ -75,14 +75,14 @@ export default function LoginPage() {
 
         <button type="submit" disabled={isSubmitting}
           style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 800, cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1, marginTop: 4, boxShadow: '0 4px 14px rgba(124,58,237,0.3)' }}>
-          {isSubmitting ? '⏳ Login ho raha hai...' : '🚀 Login Karo'}
+          {isSubmitting ? '⏳ Signing in...' : 'Sign In'}
         </button>
       </form>
 
       <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f1f5f9', textAlign: 'center' }}>
         <p style={{ fontSize: 14, color: '#64748b', margin: 0 }}>
-          Account nahi hai?{' '}
-          <Link to="/register" style={{ color: '#7c3aed', fontWeight: 700, textDecoration: 'none' }}>Register karo ✨</Link>
+          Don't have an account?{' '}
+          <Link to="/register" style={{ color: '#7c3aed', fontWeight: 700, textDecoration: 'none' }}>Create Account</Link>
         </p>
       </div>
     </AuthLayout>
