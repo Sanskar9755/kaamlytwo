@@ -27,6 +27,7 @@ export default function LoginPage() {
   const { login } = useAuth()
   const [showPw, setShowPw] = useState(false)
   const [apiError, setApiError] = useState('')
+  const [rememberMe, setRememberMe] = useState(true)
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<F>({ resolver: zodResolver(schema) })
 
@@ -34,7 +35,7 @@ export default function LoginPage() {
     setApiError('')
     try {
       const res = await authService.login(v.identifier, v.password)
-      login(res.token, res.user)
+      login(res.token, res.user, rememberMe)
       navigate('/intent')
     } catch (e: unknown) {
       const err = e as { response?: { data?: { message?: string } } }
@@ -82,6 +83,31 @@ export default function LoginPage() {
             ❌ {apiError}
           </div>
         )}
+
+        {/* Remember Me */}
+        <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', userSelect: 'none' }}>
+          <div
+            onClick={() => setRememberMe(v => !v)}
+            style={{
+              width: 20, height: 20, borderRadius: 6, flexShrink: 0,
+              border: `2px solid ${rememberMe ? '#7c3aed' : 'rgba(255,255,255,0.25)'}`,
+              background: rememberMe ? '#7c3aed' : 'transparent',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.2s', cursor: 'pointer'
+            }}
+          >
+            {rememberMe && <span style={{ color: '#fff', fontSize: 12, fontWeight: 900, lineHeight: 1 }}>✓</span>}
+          </div>
+          <span
+            onClick={() => setRememberMe(v => !v)}
+            style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', fontWeight: 500 }}
+          >
+            Remember me
+          </span>
+          <span style={{ marginLeft: 'auto', fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>
+            {rememberMe ? 'Stay signed in' : 'Sign out on close'}
+          </span>
+        </label>
 
         <button type="submit" disabled={isSubmitting}
           style={{ background: isSubmitting ? 'rgba(124,58,237,0.5)' : 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 14, padding: '15px', fontSize: 15, fontWeight: 800, cursor: isSubmitting ? 'not-allowed' : 'pointer', marginTop: 4, boxShadow: isSubmitting ? 'none' : '0 0 24px rgba(124,58,237,0.5)', transition: 'all 0.2s' }}>
