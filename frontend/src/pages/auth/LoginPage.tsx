@@ -13,6 +13,15 @@ const schema = z.object({
 })
 type F = z.infer<typeof schema>
 
+const inp = (err?: boolean): React.CSSProperties => ({
+  width: '100%', padding: '13px 16px',
+  border: `1.5px solid ${err ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.12)'}`,
+  borderRadius: 14, fontSize: 15, outline: 'none',
+  background: err ? 'rgba(248,113,113,0.08)' : 'rgba(255,255,255,0.06)',
+  color: '#fff', boxSizing: 'border-box',
+  transition: 'all 0.2s',
+})
+
 export default function LoginPage() {
   const navigate = useNavigate()
   const { login } = useAuth()
@@ -33,56 +42,57 @@ export default function LoginPage() {
     }
   }
 
-  const inp = (err?: boolean): React.CSSProperties => ({
-    width: '100%', padding: '12px 14px', border: `1.5px solid ${err ? '#f87171' : '#e2e8f0'}`,
-    borderRadius: 12, fontSize: 15, outline: 'none', background: err ? '#fef2f2' : '#faf5ff',
-    color: '#1e293b', boxSizing: 'border-box'
-  })
-
   return (
     <AuthLayout>
-      <h2 style={{ fontSize: 26, fontWeight: 900, color: '#1e293b', margin: '0 0 4px' }}>Welcome Back 👋</h2>
-      <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 24px' }}>Sign in to your account</p>
+      <h2 style={{ fontSize: 26, fontWeight: 900, color: '#fff', margin: '0 0 4px' }}>Welcome Back 👋</h2>
+      <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, margin: '0 0 28px' }}>Sign in to your account</p>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Email or Phone</label>
-          <input {...register('identifier')} type="text" placeholder="email@example.com or 03001234567" style={inp(!!errors.identifier)} />
-          {errors.identifier && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.identifier.message}</p>}
+          <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email or Phone</label>
+          <input {...register('identifier')} type="text" placeholder="email@example.com or 03001234567"
+            style={inp(!!errors.identifier)}
+            onFocus={e => e.target.style.borderColor = 'rgba(167,139,250,0.6)'}
+            onBlur={e => e.target.style.borderColor = errors.identifier ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.12)'}
+          />
+          {errors.identifier && <p style={{ color: '#f87171', fontSize: 12, marginTop: 6 }}>⚠️ {errors.identifier.message}</p>}
         </div>
 
         <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-            <label style={{ fontSize: 13, fontWeight: 700, color: '#374151' }}>Password</label>
-            <Link to="/forgot-password" style={{ fontSize: 12, color: '#7c3aed', textDecoration: 'none', fontWeight: 600 }}>Forgot password?</Link>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Password</label>
+            <Link to="/forgot-password" style={{ fontSize: 12, color: '#a78bfa', textDecoration: 'none', fontWeight: 600 }}>Forgot password?</Link>
           </div>
           <div style={{ position: 'relative' }}>
             <input {...register('password')} type={showPw ? 'text' : 'password'} placeholder="••••••••"
-              style={{ ...inp(!!errors.password), paddingRight: 48 }} />
+              style={{ ...inp(!!errors.password), paddingRight: 48 }}
+              onFocus={e => e.target.style.borderColor = 'rgba(167,139,250,0.6)'}
+              onBlur={e => e.target.style.borderColor = errors.password ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.12)'}
+            />
             <button type="button" onClick={() => setShowPw(v => !v)}
-              style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>
+              style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'rgba(255,255,255,0.5)' }}>
               {showPw ? '🙈' : '👁️'}
             </button>
           </div>
-          {errors.password && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.password.message}</p>}
+          {errors.password && <p style={{ color: '#f87171', fontSize: 12, marginTop: 6 }}>⚠️ {errors.password.message}</p>}
         </div>
 
         {apiError && (
-          <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', color: '#dc2626', fontSize: 13 }}>
+          <div style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 12, padding: '12px 16px', color: '#f87171', fontSize: 13 }}>
             ❌ {apiError}
           </div>
         )}
 
         <button type="submit" disabled={isSubmitting}
-          style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 800, cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1, marginTop: 4, boxShadow: '0 4px 14px rgba(124,58,237,0.3)' }}>
-          {isSubmitting ? '⏳ Signing in...' : 'Sign In'}
+          style={{ background: isSubmitting ? 'rgba(124,58,237,0.5)' : 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 14, padding: '15px', fontSize: 15, fontWeight: 800, cursor: isSubmitting ? 'not-allowed' : 'pointer', marginTop: 4, boxShadow: isSubmitting ? 'none' : '0 0 24px rgba(124,58,237,0.5)', transition: 'all 0.2s' }}>
+          {isSubmitting ? '⏳ Signing in...' : 'Sign In →'}
         </button>
       </form>
 
-      <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f1f5f9', textAlign: 'center' }}>
-        <p style={{ fontSize: 14, color: '#64748b', margin: 0 }}>
+      <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.08)', textAlign: 'center' }}>
+        <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', margin: 0 }}>
           Don't have an account?{' '}
-          <Link to="/register" style={{ color: '#7c3aed', fontWeight: 700, textDecoration: 'none' }}>Create Account</Link>
+          <Link to="/register" style={{ color: '#a78bfa', fontWeight: 700, textDecoration: 'none' }}>Create Account ✨</Link>
         </p>
       </div>
     </AuthLayout>

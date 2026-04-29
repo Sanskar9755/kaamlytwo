@@ -19,8 +19,11 @@ const schema = z.object({
 type F = z.infer<typeof schema>
 
 const inp = (err?: boolean): React.CSSProperties => ({
-  width: '100%', padding: '12px 14px', border: `1.5px solid ${err ? '#f87171' : '#e2e8f0'}`,
-  borderRadius: 12, fontSize: 15, outline: 'none', background: err ? '#fef2f2' : '#faf5ff', color: '#1e293b', boxSizing: 'border-box'
+  width: '100%', padding: '13px 16px',
+  border: `1.5px solid ${err ? 'rgba(248,113,113,0.5)' : 'rgba(255,255,255,0.12)'}`,
+  borderRadius: 14, fontSize: 15, outline: 'none',
+  background: err ? 'rgba(248,113,113,0.08)' : 'rgba(255,255,255,0.06)',
+  color: '#fff', boxSizing: 'border-box', transition: 'all 0.2s',
 })
 
 export default function RegisterPage() {
@@ -56,22 +59,22 @@ export default function RegisterPage() {
 
   return (
     <AuthLayout>
-      <h2 style={{ fontSize: 26, fontWeight: 900, color: '#1e293b', margin: '0 0 4px' }}>Create Account 🎉</h2>
-      <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 20px' }}>Join KaamlyTwo and get started</p>
+      <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', margin: '0 0 4px' }}>Create Account 🎉</h2>
+      <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, margin: '0 0 24px' }}>Join KaamlyTwo and get started</p>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Full Name</label>
+          <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Full Name</label>
           <input {...register('name')} type="text" placeholder="Ali Hassan" style={inp(!!errors.name)} />
-          {errors.name && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.name.message}</p>}
+          {errors.name && <p style={{ color: '#f87171', fontSize: 12, marginTop: 6 }}>⚠️ {errors.name.message}</p>}
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Register with</label>
-          <div style={{ display: 'flex', borderRadius: 12, border: '1.5px solid #e2e8f0', overflow: 'hidden' }}>
+          <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Register with</label>
+          <div style={{ display: 'flex', borderRadius: 14, border: '1.5px solid rgba(255,255,255,0.12)', overflow: 'hidden' }}>
             {(['email', 'phone'] as const).map(t => (
               <button key={t} type="button" onClick={() => { setValue('identifierType', t); setValue('identifier', '') }}
-                style={{ flex: 1, padding: '10px', fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer', background: idType === t ? 'linear-gradient(135deg,#7c3aed,#4f46e5)' : '#fff', color: idType === t ? '#fff' : '#64748b' }}>
+                style={{ flex: 1, padding: '11px', fontSize: 14, fontWeight: 700, border: 'none', cursor: 'pointer', background: idType === t ? 'linear-gradient(135deg,#7c3aed,#4f46e5)' : 'rgba(255,255,255,0.04)', color: idType === t ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'all 0.2s' }}>
                 {t === 'email' ? '📧 Email' : '📱 Phone'}
               </button>
             ))}
@@ -79,47 +82,48 @@ export default function RegisterPage() {
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>{idType === 'email' ? '📧 Email Address' : '📱 Phone Number'}</label>
+          <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{idType === 'email' ? 'Email Address' : 'Phone Number'}</label>
           <input {...register('identifier')} type={idType === 'email' ? 'email' : 'tel'} placeholder={idType === 'email' ? 'email@example.com' : '03001234567'} style={inp(!!errors.identifier)} />
-          {errors.identifier && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.identifier.message}</p>}
+          {errors.identifier && <p style={{ color: '#f87171', fontSize: 12, marginTop: 6 }}>⚠️ {errors.identifier.message}</p>}
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Password</label>
+          <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Password</label>
           <div style={{ position: 'relative' }}>
             <input {...register('password')} type={showPw ? 'text' : 'password'} placeholder="••••••••" style={{ ...inp(!!errors.password), paddingRight: 48 }} />
-            <button type="button" onClick={() => setShowPw(v => !v)} style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 }}>
+            <button type="button" onClick={() => setShowPw(v => !v)} style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, color: 'rgba(255,255,255,0.5)' }}>
               {showPw ? '🙈' : '👁️'}
             </button>
           </div>
-          {errors.password && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.password.message}</p>}
+          {errors.password && <p style={{ color: '#f87171', fontSize: 12, marginTop: 6 }}>⚠️ {errors.password.message}</p>}
           {strength && (
-            <div style={{ marginTop: 6 }}>
-              <div style={{ height: 4, borderRadius: 4, background: '#e2e8f0', overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: strength === 'strong' ? '100%' : strength === 'medium' ? '66%' : '33%', background: strength === 'strong' ? '#22c55e' : strength === 'medium' ? '#f59e0b' : '#ef4444', transition: 'width 0.3s' }} />
+            <div style={{ marginTop: 8 }}>
+              <div style={{ height: 3, borderRadius: 4, background: 'rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: strength === 'strong' ? '100%' : strength === 'medium' ? '66%' : '33%', background: strength === 'strong' ? 'linear-gradient(90deg,#22c55e,#4ade80)' : strength === 'medium' ? 'linear-gradient(90deg,#f59e0b,#fbbf24)' : 'linear-gradient(90deg,#ef4444,#f87171)', transition: 'width 0.3s' }} />
               </div>
-              <p style={{ fontSize: 11, marginTop: 2, color: strength === 'strong' ? '#16a34a' : strength === 'medium' ? '#d97706' : '#dc2626' }}>
-                {strength === 'strong' ? '✅ Strong' : strength === 'medium' ? '⚠️ Medium' : '❌ Weak'}
+              <p style={{ fontSize: 11, marginTop: 4, color: strength === 'strong' ? '#4ade80' : strength === 'medium' ? '#fbbf24' : '#f87171' }}>
+                {strength === 'strong' ? '✅ Strong password' : strength === 'medium' ? '⚠️ Medium strength' : '❌ Weak password'}
               </p>
             </div>
           )}
         </div>
 
         <div>
-          <label style={{ fontSize: 13, fontWeight: 700, color: '#374151', display: 'block', marginBottom: 6 }}>Confirm Password</label>
+          <label style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Confirm Password</label>
           <input {...register('confirmPassword')} type="password" placeholder="••••••••" style={inp(!!errors.confirmPassword)} />
-          {errors.confirmPassword && <p style={{ color: '#ef4444', fontSize: 12, marginTop: 4 }}>⚠️ {errors.confirmPassword.message}</p>}
+          {errors.confirmPassword && <p style={{ color: '#f87171', fontSize: 12, marginTop: 6 }}>⚠️ {errors.confirmPassword.message}</p>}
         </div>
 
-        {apiError && <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', color: '#dc2626', fontSize: 13 }}>❌ {apiError}</div>}
+        {apiError && <div style={{ background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 12, padding: '12px 16px', color: '#f87171', fontSize: 13 }}>❌ {apiError}</div>}
 
-        <button type="submit" disabled={isSubmitting} style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px', fontSize: 15, fontWeight: 800, cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}>
-          {isSubmitting ? '⏳ Creating account...' : 'Create Account'}
+        <button type="submit" disabled={isSubmitting}
+          style={{ background: isSubmitting ? 'rgba(124,58,237,0.5)' : 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', border: 'none', borderRadius: 14, padding: '15px', fontSize: 15, fontWeight: 800, cursor: isSubmitting ? 'not-allowed' : 'pointer', boxShadow: isSubmitting ? 'none' : '0 0 24px rgba(124,58,237,0.5)', marginTop: 4 }}>
+          {isSubmitting ? '⏳ Creating account...' : 'Create Account →'}
         </button>
       </form>
 
-      <p style={{ textAlign: 'center', marginTop: 16, fontSize: 14, color: '#64748b' }}>
-        Already have an account? <Link to="/login" style={{ color: '#7c3aed', fontWeight: 700, textDecoration: 'none' }}>Sign In</Link>
+      <p style={{ textAlign: 'center', marginTop: 20, fontSize: 14, color: 'rgba(255,255,255,0.4)' }}>
+        Already have an account? <Link to="/login" style={{ color: '#a78bfa', fontWeight: 700, textDecoration: 'none' }}>Sign In</Link>
       </p>
     </AuthLayout>
   )

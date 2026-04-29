@@ -166,6 +166,21 @@ db.exec(`
     FOREIGN KEY (reviewer_user_id) REFERENCES users(id) ON DELETE CASCADE
   );
   CREATE INDEX IF NOT EXISTS idx_reviews_worker ON reviews(worker_user_id);
+
+  -- Unlocked chats (payment gating)
+  CREATE TABLE IF NOT EXISTS unlocked_chats (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    worker_id INTEGER NOT NULL,
+    amount INTEGER NOT NULL DEFAULT 10,
+    payment_method TEXT NOT NULL DEFAULT 'simulated',
+    payment_ref TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(customer_id, worker_id),
+    FOREIGN KEY (customer_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (worker_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+  CREATE INDEX IF NOT EXISTS idx_unlocked_chats_customer ON unlocked_chats(customer_id);
 `)
 
 // Migrate: add columns if missing (for existing DBs)

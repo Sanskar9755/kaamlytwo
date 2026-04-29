@@ -73,9 +73,11 @@ router.get('/', authMiddleware, (req, res) => {
 router.put('/', authMiddleware, (req, res) => {
   const { name, location, skills } = req.body
   if (!name || name.trim().length < 2) return res.status(422).json({ message: 'Name must be at least 2 characters.' })
-  if (!skills || !Array.isArray(skills) || skills.length === 0) return res.status(422).json({ message: 'Please select at least one skill.' })
 
-  for (const s of skills) {
+  // Skills are optional for hirers (empty array allowed)
+  const skillsArray = skills && Array.isArray(skills) ? skills : []
+
+  for (const s of skillsArray) {
     if (!s.skill_id || !s.rate || s.rate <= 0) return res.status(422).json({ message: 'Each skill must have a rate greater than 0.' })
     const skillExists = db.prepare('SELECT id FROM skills WHERE id = ?').get(s.skill_id)
     if (!skillExists) return res.status(422).json({ message: `Invalid skill ID: ${s.skill_id}` })
@@ -95,7 +97,7 @@ router.put('/', authMiddleware, (req, res) => {
   }
 
   db.prepare('DELETE FROM profile_skills WHERE profile_id = ?').run(profileId)
-  for (const s of skills) {
+  for (const s of skillsArray) {
     const rateType = s.rate_type || 'per_task'
     const expLevel = s.experience_level || 'beginner'
     const psResult = db.prepare('INSERT INTO profile_skills (profile_id, skill_id, rate, rate_type, experience_level) VALUES (?, ?, ?, ?, ?)').run(profileId, s.skill_id, s.rate, rateType, expLevel)
@@ -111,7 +113,9 @@ router.put('/', authMiddleware, (req, res) => {
     }
   }
 
-  db.prepare('UPDATE profiles SET is_complete = 1, updated_at = ? WHERE id = ?').run(now, profileId)
+  // Mark complete only if skills are provided
+  const isComplete = skillsArray.length > 0 ? 1 : 0
+  db.prepare('UPDATE profiles SET is_complete = ?, updated_at = ? WHERE id = ?').run(isComplete, now, profileId)
   return res.json(buildProfileResponse(req.user.id))
 })
 

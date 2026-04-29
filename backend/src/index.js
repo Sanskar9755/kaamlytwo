@@ -49,6 +49,7 @@ app.use('/api/skills', require('./routes/skills'))
 
 const authMiddleware = require('./middleware/auth')
 app.use('/api/chat', authMiddleware, require('./routes/chat'))
+app.use('/api/payment', require('./routes/payment'))
 app.use('/api/reviews', (req, res, next) => { if (req.method === 'POST') return authMiddleware(req, res, next); next() }, require('./routes/reviews'))
 
 // Health check

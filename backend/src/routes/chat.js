@@ -42,6 +42,15 @@ router.post('/conversations', (req, res) => {
   const worker = db.prepare('SELECT id FROM users WHERE id = ?').get(worker_id)
   if (!worker) return res.status(404).json({ message: 'Worker nahi mila.' })
 
+  // Check if chat is unlocked (payment done) - workers can always chat
+  const isWorker = db.prepare('SELECT id FROM profiles WHERE user_id = ? AND is_complete = 1').get(customer_id)
+  if (!isWorker) {
+    const unlocked = db.prepare('SELECT id FROM unlocked_chats WHERE customer_id = ? AND worker_id = ?').get(customer_id, worker_id)
+    if (!unlocked) {
+      return res.status(402).json({ message: 'Payment required to unlock chat.', code: 'PAYMENT_REQUIRED' })
+    }
+  }
+
   try {
     db.prepare(
       'INSERT OR IGNORE INTO conversations (customer_id, worker_id) VALUES (?, ?)'

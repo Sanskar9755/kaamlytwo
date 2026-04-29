@@ -35,7 +35,7 @@ export default function OtpVerifyPage() {
       navigate('/intent')
     } catch (e: unknown) {
       const err = e as { response?: { data?: { message?: string } } }
-      setError(err?.response?.data?.message ?? 'OTP verification failed. Please try again.')
+      setError(err?.response?.data?.message ?? 'OTP verification failed.')
       setSubmitting(false)
       setDigits(Array(6).fill(''))
       setTimeout(() => refs.current[0]?.focus(), 50)
@@ -62,44 +62,61 @@ export default function OtpVerifyPage() {
       setCountdown(60); setDigits(Array(6).fill(''))
       if (res.dev_otp) setDevOtp(res.dev_otp)
       setTimeout(() => refs.current[0]?.focus(), 50)
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { message?: string } } }
+      setError(err?.response?.data?.message ?? 'Failed to resend OTP.')
     }
-    catch (e: unknown) { const err = e as { response?: { data?: { message?: string } } }; setError(err?.response?.data?.message ?? 'Failed to resend OTP.') }
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8f7ff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 20, fontFamily: 'system-ui,sans-serif' }}>
-      <div style={{ width: '100%', maxWidth: 400, background: '#fff', borderRadius: 24, padding: '36px 28px', boxShadow: '0 4px 24px rgba(124,58,237,0.1)', border: '1px solid #ede9fe', textAlign: 'center' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>📲</div>
-        <h2 style={{ fontSize: 24, fontWeight: 900, color: '#1e293b', margin: '0 0 6px' }}>Verify OTP</h2>
-        <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 4px' }}>Enter the 6-digit code sent to</p>
-        {phone && <span style={{ background: '#f5f3ff', color: '#7c3aed', padding: '4px 12px', borderRadius: 20, fontSize: 13, fontWeight: 700 }}>📱 {phone}</span>}
+    <div style={{ minHeight: '100vh', background: '#0f0a1e', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 20, fontFamily: 'system-ui,sans-serif', position: 'relative', overflow: 'hidden' }}>
+
+      {/* Background */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <div className="blob1" style={{ position: 'absolute', top: '-10%', left: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div className="blob2" style={{ position: 'absolute', bottom: '-10%', right: '-10%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(6,182,212,0.25) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+      </div>
+
+      <div style={{ width: '100%', maxWidth: 400, background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px)', borderRadius: 28, padding: '40px 28px', boxShadow: '0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+
+        <div style={{ width: 64, height: 64, borderRadius: 20, background: 'linear-gradient(135deg,#7c3aed,#06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 28, boxShadow: '0 0 30px rgba(124,58,237,0.5)' }}>📲</div>
+
+        <h2 style={{ fontSize: 24, fontWeight: 900, color: '#fff', margin: '0 0 8px' }}>Verify OTP</h2>
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, margin: '0 0 6px' }}>Enter the 6-digit code sent to</p>
+        {phone && <span style={{ background: 'rgba(124,58,237,0.2)', color: '#a78bfa', padding: '5px 14px', borderRadius: 20, fontSize: 13, fontWeight: 700, border: '1px solid rgba(124,58,237,0.3)' }}>📱 {phone}</span>}
 
         {devOtp && (
-          <div style={{ margin: '12px 0 0', background: '#fefce8', border: '1.5px dashed #f59e0b', borderRadius: 12, padding: '10px 16px' }}>
-            <p style={{ margin: 0, fontSize: 12, color: '#92400e', fontWeight: 600 }}>🔧 Dev Mode — Your OTP:</p>
-            <p style={{ margin: '4px 0 0', fontSize: 28, fontWeight: 900, color: '#d97706', letterSpacing: 6 }}>{devOtp}</p>
+          <div style={{ margin: '16px 0 0', background: 'rgba(245,158,11,0.1)', border: '1px dashed rgba(245,158,11,0.4)', borderRadius: 14, padding: '12px 16px' }}>
+            <p style={{ margin: 0, fontSize: 11, color: 'rgba(251,191,36,0.7)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>🔧 Dev Mode — Your OTP</p>
+            <p style={{ margin: '6px 0 0', fontSize: 32, fontWeight: 900, color: '#fbbf24', letterSpacing: 8 }}>{devOtp}</p>
           </div>
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, margin: '24px 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 10, margin: '28px 0' }}>
           {digits.map((d, i) => (
             <input key={i} ref={el => { refs.current[i] = el }}
               type="text" inputMode="numeric" maxLength={1} value={d}
               onChange={e => handleChange(i, e.target.value)}
               onKeyDown={e => handleKey(i, e)}
               disabled={submitting}
-              style={{ width: 46, height: 54, textAlign: 'center', fontSize: 22, fontWeight: 900, borderRadius: 12, border: `2px solid ${d ? '#7c3aed' : '#e2e8f0'}`, background: d ? '#f5f3ff' : '#fff', color: '#7c3aed', outline: 'none' }}
+              style={{ width: 48, height: 58, textAlign: 'center', fontSize: 24, fontWeight: 900, borderRadius: 14, border: `2px solid ${d ? 'rgba(124,58,237,0.7)' : 'rgba(255,255,255,0.12)'}`, background: d ? 'rgba(124,58,237,0.2)' : 'rgba(255,255,255,0.05)', color: d ? '#a78bfa' : '#fff', outline: 'none', transition: 'all 0.2s', boxShadow: d ? '0 0 16px rgba(124,58,237,0.3)' : 'none' }}
             />
           ))}
         </div>
 
-        {error && <p style={{ color: '#dc2626', fontSize: 13, marginBottom: 12 }}>❌ {error}</p>}
-        {submitting && <p style={{ color: '#7c3aed', fontSize: 13, marginBottom: 12 }}>⏳ Verifying...</p>}
+        {error && <p style={{ color: '#f87171', fontSize: 13, marginBottom: 12, background: 'rgba(239,68,68,0.1)', padding: '8px 14px', borderRadius: 10, border: '1px solid rgba(239,68,68,0.2)' }}>❌ {error}</p>}
+        {submitting && (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#a78bfa', fontSize: 13, marginBottom: 12 }}>
+            <div style={{ width: 16, height: 16, border: '2px solid rgba(167,139,250,0.3)', borderTop: '2px solid #a78bfa', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+            <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+            Verifying...
+          </div>
+        )}
 
         <div>
           {countdown > 0
-            ? <p style={{ color: '#64748b', fontSize: 13 }}>Resend code in <strong style={{ color: '#7c3aed' }}>{countdown}s</strong></p>
-            : <button onClick={resend} style={{ background: '#f5f3ff', border: '1px solid #ddd6fe', color: '#7c3aed', padding: '8px 20px', borderRadius: 10, cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>🔄 Resend OTP</button>
+            ? <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>Resend code in <strong style={{ color: '#a78bfa' }}>{countdown}s</strong></p>
+            : <button onClick={resend} style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.3)', color: '#a78bfa', padding: '9px 22px', borderRadius: 12, cursor: 'pointer', fontWeight: 700, fontSize: 13 }}>🔄 Resend OTP</button>
           }
         </div>
       </div>

@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import * as profileService from '../services/profileService'
 
+const INTENT_KEY = 'kaamlytwo_intent'
+
 export default function ProfileCompletionGuard() {
   const [isComplete, setIsComplete] = useState<boolean | null>(null)
   const [error, setError] = useState(false)
 
   const check = async () => {
     setError(false)
+    // Hirers don't need full profile
+    const intent = localStorage.getItem(INTENT_KEY)
+    if (intent === 'hire') { setIsComplete(true); return }
     try {
       const data = await profileService.getProfile()
       setIsComplete(data.is_complete)
@@ -29,7 +34,7 @@ export default function ProfileCompletionGuard() {
   if (error) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-        <p style={{ color: '#64748b' }}>Profile load nahi ho paya.</p>
+        <p style={{ color: '#64748b' }}>Could not load profile.</p>
         <button onClick={check} style={{ background: '#7c3aed', color: '#fff', border: 'none', padding: '8px 20px', borderRadius: 8, cursor: 'pointer' }}>Retry</button>
       </div>
     )

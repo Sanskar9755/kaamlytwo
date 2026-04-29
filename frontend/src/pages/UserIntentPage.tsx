@@ -9,157 +9,82 @@ export default function UserIntentPage() {
 
   const handleIntent = (intent: 'hire' | 'work') => {
     localStorage.setItem(INTENT_KEY, intent)
-    if (intent === 'hire') {
-      navigate('/search')
-    } else {
-      navigate('/profile-setup')
-    }
+    if (intent === 'hire') navigate('/search')
+    else navigate('/profile-setup')
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(160deg, #f8f7ff 0%, #ede9fe 100%)',
-      fontFamily: 'system-ui, sans-serif',
-      display: 'flex',
-      flexDirection: 'column',
-    }}>
-      {/* Header */}
-      <div style={{
-        background: 'linear-gradient(135deg,#7c3aed,#4f46e5)',
-        padding: '28px 20px 40px',
-        textAlign: 'center',
-      }}>
-        <div style={{ fontSize: 40, marginBottom: 8 }}>💼</div>
-        <h1 style={{ fontSize: 26, fontWeight: 900, color: '#fff', margin: '0 0 6px', letterSpacing: '-0.5px' }}>
-          KaamlyTwo
-        </h1>
-        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, margin: 0 }}>
-          Welcome{user?.name ? `, ${user.name.split(' ')[0]}` : ''}! What would you like to do?
-        </p>
+    <div style={{ minHeight: '100vh', background: '#0f0a1e', fontFamily: 'system-ui,sans-serif', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+
+      {/* Background blobs */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <div className="blob1" style={{ position: 'absolute', top: '-5%', left: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div className="blob2" style={{ position: 'absolute', bottom: '-10%', right: '-10%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(16,185,129,0.3) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+        <div className="blob3" style={{ position: 'absolute', top: '40%', left: '40%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(236,72,153,0.2) 0%, transparent 70%)', filter: 'blur(60px)' }} />
       </div>
 
-      {/* Cards */}
-      <div style={{
-        flex: 1,
-        maxWidth: 480,
-        width: '100%',
-        margin: '0 auto',
-        padding: '0 16px 32px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 16,
-        marginTop: -20,
-      }}>
+      <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
 
-        {/* Hire Card */}
-        <button
-          onClick={() => handleIntent('hire')}
-          style={{
-            background: '#fff',
-            border: '2px solid #e2e8f0',
-            borderRadius: 24,
-            padding: '28px 24px',
-            cursor: 'pointer',
-            textAlign: 'left',
-            boxShadow: '0 4px 20px rgba(124,58,237,0.08)',
-            transition: 'all 0.2s',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 18,
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = '#7c3aed'
-            ;(e.currentTarget as HTMLButtonElement).style.boxShadow = '0 8px 32px rgba(124,58,237,0.18)'
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = '#e2e8f0'
-            ;(e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 20px rgba(124,58,237,0.08)'
-          }}
-        >
-          <div style={{
-            width: 64, height: 64, borderRadius: 18,
-            background: 'linear-gradient(135deg,#7c3aed,#4f46e5)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 30, flexShrink: 0,
-            boxShadow: '0 4px 12px rgba(124,58,237,0.3)',
-          }}>🔍</div>
-          <div style={{ flex: 1 }}>
-            <p style={{ margin: '0 0 6px', fontSize: 20, fontWeight: 900, color: '#1e293b' }}>
-              Hire / Find Worker
-            </p>
-            <p style={{ margin: '0 0 10px', fontSize: 13, color: '#64748b', lineHeight: 1.5 }}>
-              Find skilled professionals near you — plumbers, electricians, drivers, developers and more.
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {['🔧 Plumber', '⚡ Electrician', '🚗 Driver', '💻 Developer'].map(tag => (
-                <span key={tag} style={{ background: '#f5f3ff', color: '#7c3aed', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600 }}>{tag}</span>
-              ))}
-            </div>
-          </div>
-          <span style={{ color: '#7c3aed', fontSize: 22, alignSelf: 'center' }}>›</span>
-        </button>
-
-        {/* Work Card */}
-        <button
-          onClick={() => handleIntent('work')}
-          style={{
-            background: '#fff',
-            border: '2px solid #e2e8f0',
-            borderRadius: 24,
-            padding: '28px 24px',
-            cursor: 'pointer',
-            textAlign: 'left',
-            boxShadow: '0 4px 20px rgba(16,185,129,0.08)',
-            transition: 'all 0.2s',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 18,
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = '#10b981'
-            ;(e.currentTarget as HTMLButtonElement).style.boxShadow = '0 8px 32px rgba(16,185,129,0.18)'
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLButtonElement).style.borderColor = '#e2e8f0'
-            ;(e.currentTarget as HTMLButtonElement).style.boxShadow = '0 4px 20px rgba(16,185,129,0.08)'
-          }}
-        >
-          <div style={{
-            width: 64, height: 64, borderRadius: 18,
-            background: 'linear-gradient(135deg,#10b981,#059669)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 30, flexShrink: 0,
-            boxShadow: '0 4px 12px rgba(16,185,129,0.3)',
-          }}>🛠️</div>
-          <div style={{ flex: 1 }}>
-            <p style={{ margin: '0 0 6px', fontSize: 20, fontWeight: 900, color: '#1e293b' }}>
-              Register Your Work
-            </p>
-            <p style={{ margin: '0 0 10px', fontSize: 13, color: '#64748b', lineHeight: 1.5 }}>
-              Offer your skills and services. Get hired by customers in your area.
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {['🏠 Home Services', '🚚 Transport', '💻 Digital', '🏗️ Construction'].map(tag => (
-                <span key={tag} style={{ background: '#f0fdf4', color: '#059669', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600 }}>{tag}</span>
-              ))}
-            </div>
-          </div>
-          <span style={{ color: '#10b981', fontSize: 22, alignSelf: 'center' }}>›</span>
-        </button>
-
-        {/* Divider */}
-        <div style={{ textAlign: 'center', color: '#94a3b8', fontSize: 12, margin: '4px 0' }}>
-          You can change this anytime from your profile
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 48 }}>
+          <div style={{ width: 72, height: 72, borderRadius: 22, background: 'linear-gradient(135deg,#7c3aed,#4f46e5,#06b6d4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: 32, boxShadow: '0 0 40px rgba(124,58,237,0.6)' }}>💼</div>
+          <h1 style={{ fontSize: 32, fontWeight: 900, margin: '0 0 8px', background: 'linear-gradient(135deg,#a78bfa,#60a5fa,#f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            Welcome{user?.name ? `, ${user.name.split(' ')[0]}` : ''}!
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 16, margin: 0 }}>What would you like to do today?</p>
         </div>
 
-        {/* Dashboard link */}
-        <button
-          onClick={() => navigate('/dashboard')}
-          style={{ background: 'transparent', border: '1.5px solid #e2e8f0', borderRadius: 14, padding: '12px', fontSize: 14, color: '#64748b', fontWeight: 600, cursor: 'pointer' }}
-        >
-          Go to Dashboard →
-        </button>
+        {/* Cards */}
+        <div style={{ width: '100%', maxWidth: 480, display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+          {/* Hire Card */}
+          <button onClick={() => handleIntent('hire')}
+            style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 24, padding: '28px 24px', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 20, transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(124,58,237,0.7)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 20px 60px rgba(124,58,237,0.25)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(124,58,237,0.3)'; (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = 'none' }}
+          >
+            {/* Glow */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg,transparent,#7c3aed,transparent)' }} />
+
+            <div style={{ width: 68, height: 68, borderRadius: 20, background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, flexShrink: 0, boxShadow: '0 8px 24px rgba(124,58,237,0.5)' }}>🔍</div>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: '0 0 6px', fontSize: 20, fontWeight: 900, color: '#fff' }}>Hire / Find Worker</p>
+              <p style={{ margin: '0 0 12px', fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>Find skilled professionals near you instantly</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {['🔧 Plumber', '⚡ Electrician', '🚗 Driver', '💻 Dev'].map(tag => (
+                  <span key={tag} style={{ background: 'rgba(124,58,237,0.2)', color: '#a78bfa', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, border: '1px solid rgba(124,58,237,0.3)' }}>{tag}</span>
+                ))}
+              </div>
+            </div>
+            <span style={{ color: '#a78bfa', fontSize: 24 }}>›</span>
+          </button>
+
+          {/* Work Card */}
+          <button onClick={() => handleIntent('work')}
+            style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 24, padding: '28px 24px', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 20, transition: 'all 0.3s', position: 'relative', overflow: 'hidden' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(16,185,129,0.7)'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 20px 60px rgba(16,185,129,0.2)' }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.border = '1px solid rgba(16,185,129,0.3)'; (e.currentTarget as HTMLElement).style.transform = 'none'; (e.currentTarget as HTMLElement).style.boxShadow = 'none' }}
+          >
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg,transparent,#10b981,transparent)' }} />
+
+            <div style={{ width: 68, height: 68, borderRadius: 20, background: 'linear-gradient(135deg,#10b981,#059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 32, flexShrink: 0, boxShadow: '0 8px 24px rgba(16,185,129,0.5)' }}>🛠️</div>
+            <div style={{ flex: 1 }}>
+              <p style={{ margin: '0 0 6px', fontSize: 20, fontWeight: 900, color: '#fff' }}>Register Your Work</p>
+              <p style={{ margin: '0 0 12px', fontSize: 13, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>Offer your skills and get hired by customers</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {['🏠 Home', '🚚 Transport', '💻 Digital', '🏗️ Build'].map(tag => (
+                  <span key={tag} style={{ background: 'rgba(16,185,129,0.15)', color: '#34d399', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 600, border: '1px solid rgba(16,185,129,0.3)' }}>{tag}</span>
+                ))}
+              </div>
+            </div>
+            <span style={{ color: '#34d399', fontSize: 24 }}>›</span>
+          </button>
+
+          <button onClick={() => navigate('/dashboard')}
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '13px', fontSize: 14, color: 'rgba(255,255,255,0.4)', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
+            Go to Dashboard →
+          </button>
+        </div>
       </div>
     </div>
   )
